@@ -27,7 +27,7 @@ lang: ''
 
 需要搞免费版兑换码。或者直接买个人版后可用，需要外币卡。
 
-通过创建 `加速区域全球可用区（不含中国大陆）` 。会分配给你一个类似 `eo3-blog.afo.im.eo.dnse4.com` 这样的CNAME地址要求你做CNAME解析。IP很烂。**可以直接做优选。**获取方式很简单，直接ITDOG PING `edgeone.ai` 找个最快的IP直接写A解析（貌似国内的也可以🤔），如图。
+通过创建 `加速区域全球可用区（不含中国大陆）` 。会分配给你一个类似 `eo3-blog.afo.im.eo.dnse4.com` 这样的CNAME地址要求你做CNAME解析。IP很烂。**可以直接做优选。** 获取方式很简单，直接ITDOG PING `edgeone.ai` 找个最快的IP直接写A解析（貌似国内的也可以🤔），如图。**本人EdgeOne优选：** `eo.072103.xyz`
 
 ![](https://free-eo-r2.afo.im/myblog/img/42ff5956-d1db-4005-8d96-05fcf7eb76f0.webp)
 

@@ -33,7 +33,7 @@ emm 这玩意吧 你们自己看速度吧
 
 ![](https://free-eo-r2.afo.im/myblog/img/33a0b34f-d36f-4214-bcf3-616f9b174630.webp)
 
-我推荐大家使用 `43.174.150.150` 。是一个中国香港的三网优化IP。速度如下
+我推荐大家使用 `43.174.150.150` 。是一个中国香港的三网优化IP。速度如下。**本人EdgeOne优选：** `eo.072103.xyz`
 
 ![](https://free-eo-r2.afo.im/myblog/img/ab4cfd6f-ef23-4670-8577-02850f372124.webp)
 
