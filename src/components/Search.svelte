@@ -10,25 +10,7 @@ let keywordDesktop = "";
 let keywordMobile = "";
 let result: SearchResult[] = [];
 let isSearching = false;
-let pagefindLoaded = false;
-
-const fakeResult: SearchResult[] = [
-	{
-		url: url("/"),
-		meta: {
-			title: "This Is a Fake Search Result",
-		},
-		excerpt:
-			"Because the search cannot work in the <mark>dev</mark> environment.",
-	},
-	{
-		url: url("/"),
-		meta: {
-			title: "If You Want to Test the Search",
-		},
-		excerpt: "Try running <mark>npm build && npm preview</mark> instead.",
-	},
-];
+let posts: any[] = [];
 
 const togglePanel = () => {
 	const panel = document.getElementById("search-panel");
@@ -46,6 +28,12 @@ const setPanelVisibility = (show: boolean, isDesktop: boolean): void => {
 	}
 };
 
+const highlightText = (text: string, keyword: string): string => {
+	if (!keyword) return text;
+	const regex = new RegExp(`(${keyword})`, "gi");
+	return text.replace(regex, "<mark>$1</mark>");
+};
+
 const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 	if (!keyword) {
 		setPanelVisibility(false, isDesktop);
@@ -56,16 +44,36 @@ const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 	isSearching = true;
 
 	try {
-		let searchResults: SearchResult[] = [];
+		const searchResults = posts
+			.filter((post) => {
+				const searchText =
+					`${post.title} ${post.description} ${post.content}`.toLowerCase();
+				return searchText.includes(keyword.toLowerCase());
+			})
+			.map((post) => {
+				const contentLower = post.content.toLowerCase();
+				const keywordLower = keyword.toLowerCase();
+				const contentIndex = contentLower.indexOf(keywordLower);
+				
+				let excerpt = '';
+				if (contentIndex !== -1) {
+					const start = Math.max(0, contentIndex - 50);
+					const end = Math.min(post.content.length, contentIndex + 100);
+					excerpt = post.content.substring(start, end);
+					if (start > 0) excerpt = '...' + excerpt;
+					if (end < post.content.length) excerpt = excerpt + '...';
+				} else {
+					excerpt = post.description || post.content.substring(0, 150) + '...';
+				}
 
-		if (import.meta.env.PROD && pagefindLoaded) {
-			const response = await window.pagefind.search(keyword);
-			searchResults = await Promise.all(
-				response.results.map((item) => item.data()),
-			);
-		} else {
-			searchResults = fakeResult;
-		}
+				return {
+					url: url(`/posts/${post.link}/`),
+					meta: {
+						title: post.title
+					},
+					excerpt: highlightText(excerpt, keyword)
+				};
+			});
 
 		result = searchResults;
 		setPanelVisibility(result.length > 0, isDesktop);
@@ -79,12 +87,34 @@ const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 };
 
 onMount(async () => {
-	pagefindLoaded = typeof window !== "undefined" && "pagefind" in window;
+	try {
+		const response = await fetch("/rss.xml");
+		const text = await response.text();
+		const parser = new DOMParser();
+		const xml = parser.parseFromString(text, "text/xml");
+		const items = xml.querySelectorAll("item");
 
-	if (import.meta.env.DEV) {
-		console.log(
-			"Pagefind is not available in development mode. Using mock data.",
-		);
+		posts = Array.from(items).map((item) => {
+			// 尝试多种方式获取content:encoded内容
+			let content = "";
+			const contentEncoded = 
+				item.getElementsByTagNameNS("*", "encoded")[0]?.textContent ||
+				item.querySelector("*|encoded")?.textContent ||
+				"";
+			
+			if (contentEncoded) {
+				content = contentEncoded.replace(/<[^>]*>/g, "");
+			}
+
+			return {
+				title: item.querySelector("title")?.textContent || "",
+				description: item.querySelector("description")?.textContent || "",
+				content: content,
+				link: item.querySelector("link")?.textContent?.replace(/.*\/posts\/(.*?)\//, "$1") || "",
+			};
+		});
+	} catch (error) {
+		console.error("Error fetching RSS:", error);
 	}
 });
 
