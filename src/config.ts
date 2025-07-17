@@ -207,11 +207,6 @@ export const navBarConfig: NavBarConfig = {
 			external: false, // Show an external link icon and will open in a new tab
 		},
 		{
-			name: "副站",
-			url: "https://info.php.afo.im", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
-		},
-		{
 			name: "统计",
 			url: "https://umami.afo.im/share/ZyDjOrmjaBTlmGtd/www.afo.im", // Internal links should not include the base path, as it is automatically added
 			external: true, // Show an external link icon and will open in a new tab
