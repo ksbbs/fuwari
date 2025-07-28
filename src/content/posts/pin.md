@@ -18,7 +18,7 @@ description: 关于如何联系二叉树树~
 
 ---
 
-TG： [Telegram: Join Group Chat](https://s.afo.im/tg)
+TG： https://t.me/+blyHrp_GihhhMWVl
 
 > 不常用，但看到会回
 
