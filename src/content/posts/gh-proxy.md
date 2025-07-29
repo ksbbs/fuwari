@@ -83,11 +83,7 @@ const domain_mappings = {
 
 # 完整代码
 
-```js
-
-```
-
-
+参见Github仓库： https://github.com/afoim/GithubSiteProxyForCloudflareWorker
 
 # 适用于高级玩家：
 
