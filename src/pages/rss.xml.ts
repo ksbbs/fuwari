@@ -5,8 +5,9 @@ import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { parse as htmlParser } from 'node-html-parser';
 import { getImage } from 'astro:assets';
-import type { APIContext } from 'astro';
+import type { APIContext, ImageMetadata } from 'astro';
 import type { RSSFeedItem } from '@astrojs/rss';
+import { getSortedPosts } from '@/utils/content-utils';
 
 const markdownParser = new MarkdownIt();
 
@@ -20,7 +21,8 @@ export async function GET(context: APIContext) {
 		throw Error('site not set');
 	}
 
-	const posts = await getCollection('posts');
+	// Use the same ordering as site listing (pinned first, then by published desc)
+	const posts = await getSortedPosts();
 	const feed: RSSFeedItem[] = [];
 
 	for (const post of posts) {
