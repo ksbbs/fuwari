@@ -40,11 +40,6 @@
 - 用途：网站性能分析、用户行为分析
 - 隐私政策：[Google 隐私政策](https://policies.google.com/privacy)
 
-**Google Ads（谷歌广告）**
-- 可能收集的信息：广告展示数据、点击数据、用户兴趣信息
-- 用途：展示相关广告、广告效果分析
-- 隐私政策：[Google 广告隐私政策](https://policies.google.com/technologies/ads)
-
 **Umami 分析**
 - 可能收集的信息：页面浏览量、访问来源、设备类型（匿名化处理）
 - 用途：网站流量统计和分析
