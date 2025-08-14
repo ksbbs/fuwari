@@ -9,7 +9,7 @@ draft: false
 lang: ''
 ---
 
-此文本来是针对于 matrix.afo.im 的，现在更改为了 m.2x.nz
+本群已删除 ~~此文本来是针对于 matrix.afo.im 的，现在更改为了 m.2x.nz~~
 
 ---
 
