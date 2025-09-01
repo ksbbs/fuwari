@@ -33,6 +33,7 @@ export default defineConfig({
     site: "https://www.2x.nz",
     base: "/",
     trailingSlash: "always",
+    output: "static",
     adapter: vercel(),
     redirects: {
         "/ak": {
