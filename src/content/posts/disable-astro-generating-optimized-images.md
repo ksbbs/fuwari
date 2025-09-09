@@ -2,7 +2,7 @@
 title: 禁用Astro跟弱智一般的静态构建图像优化
 published: 2025-09-10T06:16:30
 description: '折腾了整整一天，终于解决了这傻逼Astro对于静态构建自作聪明的图片优化了，这不仅能提高构建速度，还可以减少无谓的CPU资源消耗，更环保，也更符合Unix哲学'
-image: 'C:\Users\acofork\AppData\Roaming\marktext\images\2025-09-10-06-19-15-image.png'
+image: '../assets/images/2025-09-10-06-19-15-image.png'
 tags: [Astr]
 
 draft: false 
@@ -17,7 +17,7 @@ lang: ''
 
 *为什么要浪费这么多的时间来进行±10kb左右的图片压缩呢？*
 
-![](C:\Users\acofork\AppData\Roaming\marktext\images\2025-09-10-06-21-20-26ca667ff5c7024c12d7a8254f483b27.png)
+![](../assets/images/2025-09-10-06-21-20-26ca667ff5c7024c12d7a8254f483b27.png)
 
 # 如何让Astro不”优化“图片？
 
@@ -51,7 +51,7 @@ lang: ''
 
 *如果您了解如何在Astro的配置层面直接禁用图片优化，请联系我！我很乐意与您交流！*
 
-![](C:\Users\acofork\AppData\Roaming\marktext\images\2025-09-10-06-27-46-image.png)
+![](../assets/images/2025-09-10-06-27-46-image.png)
 
 # 尝试直接更改Astro源码来禁用图片优化（成功）
 
@@ -89,7 +89,6 @@ index 3144f4c058b161b9e6eb3c8d891b743b34783653..0ba275b320204e154307c6aff75452e9
      logger.info("SKIP_FORMAT", `${bgGreen(black(` generating optimized images `))}`);
      const totalCount = Array.from(staticImageList.values()).map((x) => x.transforms.size).reduce((a, b) => a + b, 0);
      const cpuCount = os.cpus().length;
-
 ```
 
 下文为我让OpenAI ChatGPT 5解释的已经禁用图片优化的补丁（`astro.patch`）具体做了什么
@@ -177,12 +176,12 @@ index 3144f4c058b161b9e6eb3c8d891b743b34783653..0ba275b320204e154307c6aff75452e9
 
 任何情况下使用 `astro build` 都会跳过图片优化，Cloudflare Worker的构建时间从 3分钟下降到2分钟
 
-![](C:\Users\acofork\AppData\Roaming\marktext\images\2025-09-10-06-46-49-image.png)
+![](../assets/images/2025-09-10-06-46-49-image.png)
 
-![](C:\Users\acofork\AppData\Roaming\marktext\images\2025-09-10-06-47-01-image.png)
+![](../assets/images/2025-09-10-06-47-01-image.png)
 
 构建后的页面不再为全局webp，透传原始文件名、扩展名。但仍然保留了 `/_astro` 路径，依旧支持相对路径粘贴图片
 
-![](C:\Users\acofork\AppData\Roaming\marktext\images\2025-09-10-06-49-21-image.png)
+![](../assets/images/d836b41fd85611972c2086a7064705bdb1b4ff7c.png)
 
-![](C:\Users\acofork\AppData\Roaming\marktext\images\2025-09-10-06-47-49-image.png)
+![](../assets/images/ff1314b1ab7d60bd9a49d6499db22cde23fb9f60.png)
