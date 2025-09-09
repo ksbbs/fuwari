@@ -26,9 +26,13 @@ import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import { expressiveCodeConfig } from "./src/config.ts";
 // import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
+import { defineConfig, passthroughImageService } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
+      image: {
+    service: passthroughImageService()
+  },
     site: "https://2x.nz",
     base: "/",
     trailingSlash: "always",
