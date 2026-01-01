@@ -8,6 +8,7 @@ draft: false
 lang: ''
 ---
 
+::url{href="https://cover.acofork.com"}
 ::url{href="https://http.acofork.com"}
 ::url{href="https://pic.acofork.com"}
 ::url{href="https://gallery.acofork.com"}
