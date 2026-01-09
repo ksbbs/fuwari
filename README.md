@@ -80,6 +80,14 @@ pnpm new-post helloword
 pnpm clean
 ```
 
+### 规范化图片文件名
+
+扫描 Markdown 文件中的图片引用，将文件名中的空格、逗号、多余的点等特殊字符移除，并同步更新文件引用。这有助于提高多构建平台的兼容性（某些平台不支持特殊字符文件名）。
+
+```bash
+pnpm del-space
+```
+
 ### 配置博客
 
 编辑 `src/config.ts` 文件来自定义博客配置：
