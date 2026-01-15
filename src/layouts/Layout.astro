@@ -162,27 +162,27 @@ const bannerOffset =
 			offset = offset - offset % 4;
 			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
 			
-			// // Background image loading detection
-			// const bgUrl = getComputedStyle(document.documentElement).getPropertyValue('--bg-url').trim();
-			// const bgEnable = getComputedStyle(document.documentElement).getPropertyValue('--bg-enable').trim();
+			// Background image loading detection
+			const bgUrl = getComputedStyle(document.documentElement).getPropertyValue('--bg-url').trim();
+			const bgEnable = getComputedStyle(document.documentElement).getPropertyValue('--bg-enable').trim();
 			
-			// if (bgUrl && bgUrl !== 'none' && bgEnable === '1') {
-			// 	const img = new Image();
-			// 	const urlMatch = bgUrl.match(/url\(["']?([^"')]+)["']?\)/);
-			// 	if (urlMatch) {
-			// 		img.onload = function() {
-			// 			// 背景图片完全加载后，显示背景并启用卡片透明效果
-			// 			document.body.classList.add('bg-loaded');
-			// 			document.documentElement.style.setProperty('--card-bg', 'var(--card-bg-transparent)');
-			// 			document.documentElement.style.setProperty('--float-panel-bg', 'var(--float-panel-bg-transparent)');
-			// 		};
-			// 		img.onerror = function() {
-			// 			// Keep cards opaque if background image fails to load
-			// 			console.warn('Background image failed to load, keeping cards opaque');
-			// 		};
-			// 		img.src = urlMatch[1];
-			// 	}
-			// }
+			if (bgUrl && bgUrl !== 'none' && bgEnable === '1') {
+				const img = new Image();
+				const urlMatch = bgUrl.match(/url\(["']?([^"')]+)["']?\)/);
+				if (urlMatch) {
+					img.onload = function() {
+						// 背景图片完全加载后，显示背景并启用卡片透明效果
+						document.body.classList.add('bg-loaded');
+						document.documentElement.style.setProperty('--card-bg', 'var(--card-bg-transparent)');
+						document.documentElement.style.setProperty('--float-panel-bg', 'var(--float-panel-bg-transparent)');
+					};
+					img.onerror = function() {
+						// Keep cards opaque if background image fails to load
+						console.warn('Background image failed to load, keeping cards opaque');
+					};
+					img.src = urlMatch[1];
+				}
+			}
 		</script>
 		<style define:vars={{
 			configHue,
@@ -222,19 +222,20 @@ const bannerOffset =
 				left: 0;
 				width: 100%;
 				height: 100%;
+				background-image: var(--bg-url);
 				background-position: var(--bg-position);
 				background-size: var(--bg-size);
 				background-repeat: var(--bg-repeat);
 				background-attachment: var(--bg-attachment);
-				opacity: 0;
+				opacity: var(--bg-opacity);
 				pointer-events: none;
 				z-index: -1;
 				transition: opacity 0.3s ease-in-out;
 			}
 			
-			#bg-box.loaded {
+			/* #bg-box.loaded {
 				opacity: calc(var(--bg-opacity) * var(--bg-enable));
-			}
+			} */
 		</style>
 
 		<slot name="head"></slot>
