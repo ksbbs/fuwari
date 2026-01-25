@@ -47,6 +47,14 @@ export default defineConfig({
 			status: 302,
 			destination: "/posts/pin/",
 		},
+  "/q": {
+			status: 302,
+			destination: "/posts/pin/",
+		},
+  "/t": {
+			status: 302,
+			destination: "https://i.2x.nz",
+		},
 		"/ak": {
 			status: 302,
 			destination: "https://akile.io/register?aff_code=503fe5ea-e7c5-4d68-ae05-6de99513680e",
