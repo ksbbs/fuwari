@@ -456,31 +456,25 @@ jobs:
                   if (content.startsWith('`') && content.endsWith('`')) {
                       content = content.slice(1, -1).trim();
                   }
-                  
-                  try {
-                      if (content.startsWith('```')) {
-                          const lines = content.split('\n');
-                          if (lines.length >= 2) {
-                              let endIndex = lines.length - 1;
-                              while (endIndex > 0 && !lines[endIndex].trim().startsWith('```')) endIndex--;
-                              if (endIndex > 0) content = lines.slice(1, endIndex).join('\n').trim();
-                          }
+                  if (content.startsWith('```')) {
+                      const lines = content.split('\n');
+                      if (lines.length >= 2) {
+                          let endIndex = lines.length - 1;
+                          while (endIndex > 0 && !lines[endIndex].trim().startsWith('```')) endIndex--;
+                          if (endIndex > 0) content = lines.slice(1, endIndex).join('\n').trim();
                       }
-                      if (content.startsWith('`') && content.endsWith('`')) content = content.slice(1, -1).trim();
-                      
-                      const data = JSON.parse(content);
-                      if (data.url) data.url = data.url.replace(/^[`\s]+|[`\s]+$/g, '');
-                      if (data.avatar) data.avatar = data.avatar.replace(/^[`\s]+|[`\s]+$/g, '');
-                      if (data.name) data.name = data.name.replace(/^[`\s]+|[`\s]+$/g, '');
-                      
-                      if (!data.name || !data.url) return { isValid: false, error: "Missing required fields: 'name' or 'url'" };
-                      return { isValid: true, data, error: null };
-                  } catch (e) {
-                      const contentNoNewlines = content.replace(/[\r\n]+/g, '');
-                      const data = JSON.parse(contentNoNewlines);
-                      if (!data.name || !data.url) return { isValid: false, error: "Missing required fields: 'name' or 'url'" };
-                      return { isValid: true, data, error: null };
                   }
+                  if (content.startsWith('`') && content.endsWith('`')) content = content.slice(1, -1).trim();
+                  
+                  const data = JSON.parse(content);
+                  
+                  if (data.url) data.url = data.url.replace(/^[`\s]+|[`\s]+$/g, '');
+                  if (data.avatar) data.avatar = data.avatar.replace(/^[`\s]+|[`\s]+$/g, '');
+                  if (data.name) data.name = data.name.replace(/^[`\s]+|[`\s]+$/g, '');
+                  
+                  if (!data.name || !data.url) return { isValid: false, error: "Missing required fields: 'name' or 'url'" };
+                  return { isValid: true, data, error: null };
+                  
               } catch (err) {
                   return { isValid: false, error: "Invalid JSON syntax: " + err.message };
               }
