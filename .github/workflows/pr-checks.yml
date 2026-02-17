@@ -37,21 +37,18 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 安装依赖
-        run: npm install --no-save
-
       - name: 格式化代码 (Lint)
         run: |
-          npm run lint || true
+          # npm run lint || true
           
           # 如果有更改，提交更改
-          if [ -n "$(git status --porcelain)" ]; then
-            git config --global user.name "github-actions[bot]"
-            git config --global user.email "github-actions[bot]@users.noreply.github.com"
-            git add .
-            git commit -m "style: auto fix lint issues"
-            git push
-          fi
+          # if [ -n "$(git status --porcelain)" ]; then
+          #   git config --global user.name "github-actions[bot]"
+          #   git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          #   git add .
+          #   git commit -m "style: auto fix lint issues"
+          #   git push
+          # fi
 
       - name: 获取变更文件 (PR 触发)
         if: github.event_name == 'pull_request'

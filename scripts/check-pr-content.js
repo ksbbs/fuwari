@@ -25,15 +25,63 @@ const colors = {
  */
 function validateJson(filePath) {
     try {
-        const content = fs.readFileSync(filePath, 'utf8');
-        const data = JSON.parse(content);
+        let content = fs.readFileSync(filePath, 'utf8');
         
-        // Basic schema check
-        if (!data.name || !data.url) {
-            return { isValid: false, data: null, error: "Missing required fields: 'name' or 'url'" };
+        // Remove BOM if present
+        if (content.charCodeAt(0) === 0xFEFF) {
+            content = content.slice(1);
         }
         
-        return { isValid: true, data, error: null };
+        // Clean whitespace/newlines from start/end
+        content = content.trim();
+        
+        // Advanced cleanup: try to remove newlines/spaces around JSON structure if parsing fails
+        // But first, let's try standard parse
+        try {
+            const data = JSON.parse(content);
+            if (!data.name || !data.url) {
+                return { isValid: false, data: null, error: "Missing required fields: 'name' or 'url'" };
+            }
+            return { isValid: true, data, error: null };
+        } catch (e) {
+            // If failed, try aggressive cleanup: remove all newlines and excess spaces
+            // This is risky if string values contain newlines, but for simple friend/sponsor JSONs it's usually fine
+            // Better strategy: just rely on trim() which we did. 
+            // Maybe the issue is internal newlines in strings? standard JSON supports that if escaped.
+            // If it's invalid JSON, it's invalid.
+            // But user asked to "remove all spaces and newlines before checking". 
+            // CAUTION: Removing ALL spaces breaks strings like "name": "Foo Bar".
+            // Intent is likely "remove leading/trailing junk" OR "minification".
+            
+            // Let's try to parse it as is first (above).
+            // If user meant "sanitize the file content to be valid JSON even if it has garbage", 
+            // typical garbage is BOM (handled), or maybe wrapping text?
+            
+            // Re-reading user request: "在判断它是否为json之前删除所有空格和换行"
+            // If we delete ALL spaces/newlines, `{"a": "b c"}` becomes `{"a":"bc"}`. This changes data.
+            // Maybe user means "minify"? JSON.parse handles minified JSON fine.
+            // If the user implies the input file might NOT be JSON but has JSON hidden inside? 
+            // Or maybe the file has extra whitespace *outside* the JSON object? `trim()` handles that.
+            
+            // Let's assume "remove formatting whitespace" is what's meant, which JSON.parse already ignores.
+            // The only thing JSON.parse DOESN'T ignore is non-whitespace garbage or invalid syntax.
+            
+            // If the user strictly means "delete \n and \r", let's do that, but keep spaces?
+            // "删除所有空格和换行" -> This is very destructive.
+            // Let's assume "remove newlines" is safe-ish for this data (URLs/Names usually don't have newlines).
+            // But "remove spaces" will break "First Last".
+            
+            // Compromise based on common issues:
+            // 1. Trim (done)
+            // 2. If parse fail, try removing ONLY newlines (maybe they broke a string?)
+            
+            const contentNoNewlines = content.replace(/[\r\n]+/g, '');
+            const data = JSON.parse(contentNoNewlines);
+             if (!data.name || !data.url) {
+                return { isValid: false, data: null, error: "Missing required fields: 'name' or 'url'" };
+            }
+            return { isValid: true, data, error: null };
+        }
     } catch (err) {
         return { isValid: false, data: null, error: `Invalid JSON syntax: ${err.message}` };
     }
