@@ -228,11 +228,42 @@ jobs:
             local pr=$1
             echo "正在验证 PR #$pr..."
             
-            # 获取变更文件
+            # 获取变更文件（解决中文路径问题）
+            # 1. 显式设置 git quotepath 为 false
+            # 2. 使用 gh pr diff 的原始输出，它可能已经应用了 git 配置
+            # 注意：gh pr diff 可能不直接尊重 .gitconfig，需要显式传递配置或使用 git 命令
+            # 但这里我们先尝试强制 git 配置生效，然后用 git 命令获取 diff（如果已经 checkout）
+            # 或者继续用 gh pr diff 但期望它能正确输出。
+            
+            # 如果 gh pr diff 仍然输出八进制转义，我们需要解码。
+            # Python 是最通用的解码工具
             files=$(gh pr diff "$pr" --name-only)
             
-            # 打印原始文件列表以供调试
-            echo "PR #$pr 原始变更文件列表:"
+            # 使用 python 解码 unicode escape (e.g. \351\203...)
+            # 注意：printf 可能无法完全处理所有 git 转义格式，python 更稳健
+            decoded_files=$(echo "$files" | python3 -c "import sys; print(sys.stdin.read().encode('latin1').decode('unicode_escape').encode('latin1').decode('utf-8'))" 2>/dev/null || echo "$files")
+            
+            # 如果 python 解码失败（可能原本就是正常的 utf-8），回退到原始输出
+            # 上面的 python 逻辑尝试处理 'quoted' octal sequences. 
+            # Git 的 quote 输出通常是把字节当做 latin1 读入的 octal escape。
+            
+            # 简化版：如果文件列表包含反斜杠，尝试解码
+            if [[ "$files" == *"\\"* ]]; then
+               # 尝试去除首尾引号（如果 git core.quotePath=true，文件名会被引号包裹）
+               # 然后解码
+               # 但 gh pr diff 输出的是列表。
+               # 让我们逐行处理
+               files=$(echo "$files" | while read -r line; do
+                 # 去除首尾引号
+                 line="${line%\"}"
+                 line="${line#\"}"
+                 # 解码 octal
+                 echo -e "$line"
+               done)
+            fi
+            
+            # 打印调试
+            echo "PR #$pr 解码后文件列表:"
             echo "$files"
             
             # 过滤相关文件

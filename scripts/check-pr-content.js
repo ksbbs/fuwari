@@ -34,11 +34,66 @@ function validateJson(filePath) {
         
         // Clean whitespace/newlines from start/end
         content = content.trim();
+
+        // Check if content is wrapped in backticks (common markdown mistake)
+        if (content.startsWith('`') && content.endsWith('`')) {
+            content = content.slice(1, -1).trim();
+        }
         
         // Advanced cleanup: try to remove newlines/spaces around JSON structure if parsing fails
         // But first, let's try standard parse
         try {
+            // Also handle internal backticks in values which user showed in example: "url": " `https://...` "
+            // This is invalid JSON. We need to clean up backticks inside values?
+            // User example: "url": " `https://d5v.cc` "
+            // This is actually VALID JSON string, but the value contains spaces and backticks.
+            // But if the user says "被判断为无效的json", maybe the whole file has issues?
+            // Wait, if the value is " `https://...` ", JSON.parse works, but the URL check will fail later.
+            // BUT user said "Invalid JSON syntax".
+            // Let's look at the user input again:
+            /*
+             { 
+                "name": "d5v Blog", 
+                "avatar": " `https://d5v.cc/favicon.ico` ", 
+                ...
+             }
+            */
+            // If the user literally put backticks inside the quotes, it IS valid JSON.
+            // But if they put backticks AROUND the quotes? e.g. "url": `https://...` -> Invalid.
+            // Or if they put backticks around the whole file content?
+            
+            // Let's assume the user meant the values contain backticks which might be fine for JSON but bad for URL.
+            // BUT if it fails "Invalid JSON syntax", maybe they used backticks INSTEAD of quotes?
+            // Or maybe the file content itself is wrapped in markdown code block markers like ```json ... ```?
+            
+            // Handle Markdown code blocks
+            if (content.startsWith('```')) {
+                const lines = content.split('\n');
+                // Remove first line (```json) and last line (```)
+                if (lines.length >= 2) {
+                    // Find the end of the code block
+                    let endIndex = lines.length - 1;
+                    while (endIndex > 0 && !lines[endIndex].trim().startsWith('```')) {
+                        endIndex--;
+                    }
+                    if (endIndex > 0) {
+                         content = lines.slice(1, endIndex).join('\n').trim();
+                    }
+                }
+            }
+            
+            // Also handle simple ` wrapping again after markdown block cleanup
+             if (content.startsWith('`') && content.endsWith('`')) {
+                content = content.slice(1, -1).trim();
+            }
+
             const data = JSON.parse(content);
+            
+            // Clean up values (remove surrounding backticks and spaces from fields)
+            if (data.url) data.url = data.url.replace(/^[`\s]+|[`\s]+$/g, '');
+            if (data.avatar) data.avatar = data.avatar.replace(/^[`\s]+|[`\s]+$/g, '');
+            if (data.name) data.name = data.name.replace(/^[`\s]+|[`\s]+$/g, '');
+
             if (!data.name || !data.url) {
                 return { isValid: false, data: null, error: "Missing required fields: 'name' or 'url'" };
             }
@@ -157,6 +212,11 @@ async function checkPrFile(filePath) {
 
     const data = jsonResult.data;
     console.log(`${colors.green}✅ JSON 语法正确${colors.reset}`);
+    
+    // Print cleaned JSON content for debugging
+    console.log("解析后的 JSON 内容:");
+    console.log(JSON.stringify(data, null, 2));
+    
     console.log(`名称: ${data.name}`);
     console.log(`URL: ${data.url}`);
     if (data.avatar) console.log(`头像: ${data.avatar}`);
