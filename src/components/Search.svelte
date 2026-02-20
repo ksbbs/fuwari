@@ -7,9 +7,11 @@ interface SearchResult {
 	url: string;
 	meta: {
 		title: string;
+		titleHighlighted: string;
 	};
 	excerpt: string;
 	urlPath?: string;
+	urlPathHighlighted?: string;
 }
 
 let keywordDesktop = "";
@@ -90,9 +92,11 @@ const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 					url: url(`/posts/${post.link}/`),
 					meta: {
 						title: post.title,
+						titleHighlighted: highlightText(post.title, keyword),
 					},
 					excerpt: highlightText(excerpt, keyword),
 					urlPath: `/posts/${post.link}`,
+					urlPathHighlighted: highlightText(`/posts/${post.link}`, keyword),
 				};
 			});
 
@@ -186,10 +190,10 @@ top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2">
            class="transition first-of-type:mt-2 lg:first-of-type:mt-0 group block
        rounded-xl text-lg px-3 py-2 hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)]">
             <div class="transition text-90 inline-flex font-bold group-hover:text-[var(--primary)]">
-                {item.meta.title}<Icon icon="fa6-solid:chevron-right" class="transition text-[0.75rem] translate-x-1 my-auto text-[var(--primary)]"></Icon>
+                {@html item.meta.titleHighlighted}<Icon icon="fa6-solid:chevron-right" class="transition text-[0.75rem] translate-x-1 my-auto text-[var(--primary)]"></Icon>
             </div>
             <div class="transition text-xs text-black/50 dark:text-white/50 mb-1 font-mono">
-                            {item.urlPath}
+                            {@html item.urlPathHighlighted}
                         </div>
             <div class="transition text-sm text-50">
                 {@html item.excerpt}
@@ -212,5 +216,12 @@ top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2">
 
   .search-panel::-webkit-scrollbar {
     display: none; /* Chrome, Safari and Opera */
+  }
+
+  .search-panel :global(mark) {
+    background-color: var(--primary);
+    color: white;
+    padding: 0 2px;
+    border-radius: 2px;
   }
 </style>
