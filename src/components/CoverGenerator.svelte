@@ -515,7 +515,7 @@
 <div class="flex flex-col items-center gap-8 w-full max-w-6xl mx-auto relative">
   <!-- Preview Area -->
   <div 
-      class="w-full overflow-hidden flex justify-center bg-[var(--card-bg)] p-4 rounded-xl border border-[var(--line-color)] select-none transition-colors duration-300 touch-none"
+      class="w-full overflow-hidden flex justify-center bg-[var(--card-bg)] p-4 rounded-xl select-none transition-colors duration-300 touch-none"
       on:pointerdown={handlePointerDown}
       on:pointermove={handlePointerMove}
       on:pointerup={handlePointerUp}
@@ -528,7 +528,7 @@
         height={canvasHeight} 
         viewBox="0 0 {canvasWidth} {canvasHeight}"
         xmlns="http://www.w3.org/2000/svg"
-        style="max-width: 100%; height: auto; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); cursor: {bgImage ? (isDragging ? 'grabbing' : 'grab') : 'default'};"
+        style="max-width: 100%; height: auto; cursor: {bgImage ? (isDragging ? 'grabbing' : 'grab') : 'default'};"
         on:wheel={handleWheel}
       >
         <defs>
@@ -655,7 +655,7 @@
   </div>
 
   <!-- Controls -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full bg-[var(--card-bg)] p-6 rounded-xl shadow-lg border border-[var(--line-color)] transition-colors duration-300" style="--hue: {hue}">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full bg-[var(--card-bg)] p-6 rounded-xl transition-colors duration-300" style="--hue: {hue}">
     
     <!-- Left Column: Content -->
     <div class="flex flex-col gap-6">
