@@ -566,7 +566,6 @@ jobs:
                   return
                 }
               }
-            }
 
   verify_and_merge:
     if: ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request && github.event.comment.body == '准备完毕' }}
