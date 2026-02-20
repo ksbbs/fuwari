@@ -1,4 +1,3 @@
-import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
@@ -14,9 +13,9 @@ import rehypeExternalLinks from "rehype-external-links";
 import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
 import remarkDirective from "remark-directive"; /* Handle directives */
-import { remarkGithubAdmonitions } from "./src/plugins/remark-github-admonitions.js";
 import remarkMath from "remark-math";
 import remarkSectionize from "remark-sectionize";
+import { SKIP, visit } from "unist-util-visit";
 import { imageFallbackConfig, siteConfig } from "./src/config.ts";
 import { expressiveCodeConfig } from "./src/config.ts";
 // import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts";
@@ -27,68 +26,69 @@ import { UrlCardComponent } from "./src/plugins/rehype-component-url-card.mjs";
 import rehypeImageFallback from "./src/plugins/rehype-image-fallback.mjs";
 import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
+import { remarkGithubAdmonitions } from "./src/plugins/remark-github-admonitions.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
-import { visit, SKIP } from 'unist-util-visit';
 
 function remarkSpoiler() {
-    return (tree) => {
-        visit(tree, 'paragraph', (node) => {
-            const newChildren = [];
-            let inSpoiler = false;
-            
-            // Check if any child contains '||'
-            const hasSpoiler = node.children.some(child => 
-                child.type === 'text' && child.value && child.value.includes('||')
-            );
-            
-            if (!hasSpoiler) return;
+	return (tree) => {
+		visit(tree, "paragraph", (node) => {
+			const newChildren = [];
+			let inSpoiler = false;
 
-            for (const child of node.children) {
-                if (child.type === 'text') {
-                    const parts = child.value.split('||');
-                    
-                    if (parts.length === 1) {
-                        newChildren.push(child);
-                        continue;
-                    }
-                    
-                    parts.forEach((part, index) => {
-                        if (part) {
-                            newChildren.push({ type: 'text', value: part });
-                        }
-                        
-                        if (index < parts.length - 1) {
-                            if (!inSpoiler) {
-                                newChildren.push({
-                                    type: 'html',
-                                    value: '<span class="spoiler" title="点击显示">'
-                                });
-                                inSpoiler = true;
-                            } else {
-                                newChildren.push({
-                                    type: 'html',
-                                    value: '</span>'
-                                });
-                                inSpoiler = false;
-                            }
-                        }
-                    });
-                } else {
-                    newChildren.push(child);
-                }
-            }
-            
-            if (inSpoiler) {
-                newChildren.push({
-                    type: 'html',
-                    value: '</span>'
-                });
-            }
-            
-            node.children = newChildren;
-            return SKIP;
-        });
-    };
+			// Check if any child contains '||'
+			const hasSpoiler = node.children.some(
+				(child) =>
+					child.type === "text" && child.value && child.value.includes("||"),
+			);
+
+			if (!hasSpoiler) return;
+
+			for (const child of node.children) {
+				if (child.type === "text") {
+					const parts = child.value.split("||");
+
+					if (parts.length === 1) {
+						newChildren.push(child);
+						continue;
+					}
+
+					parts.forEach((part, index) => {
+						if (part) {
+							newChildren.push({ type: "text", value: part });
+						}
+
+						if (index < parts.length - 1) {
+							if (!inSpoiler) {
+								newChildren.push({
+									type: "html",
+									value: '<span class="spoiler" title="点击显示">',
+								});
+								inSpoiler = true;
+							} else {
+								newChildren.push({
+									type: "html",
+									value: "</span>",
+								});
+								inSpoiler = false;
+							}
+						}
+					});
+				} else {
+					newChildren.push(child);
+				}
+			}
+
+			if (inSpoiler) {
+				newChildren.push({
+					type: "html",
+					value: "</span>",
+				});
+			}
+
+			node.children = newChildren;
+			return SKIP;
+		});
+	};
 }
 
 // https://astro.build/config
@@ -107,23 +107,25 @@ export default defineConfig({
 		},
 		"/long": {
 			status: 302,
-			destination: "https://iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.in/",
+			destination:
+				"https://iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.in/",
 		},
 		"/tit": {
 			status: 302,
 			destination: "/posts/pin/",
 		},
-  "/q": {
+		"/q": {
 			status: 302,
 			destination: "/posts/pin/",
 		},
-  "/t": {
+		"/t": {
 			status: 302,
 			destination: "https://i.2x.nz",
 		},
 		"/ak": {
 			status: 302,
-			destination: "https://akile.io/register?aff_code=503fe5ea-e7c5-4d68-ae05-6de99513680e",
+			destination:
+				"https://akile.io/register?aff_code=503fe5ea-e7c5-4d68-ae05-6de99513680e",
 		},
 		"/yyb": {
 			status: 302,
@@ -163,7 +165,8 @@ export default defineConfig({
 		},
 		"/esa": {
 			status: 302,
-			destination: "https://tianchi.aliyun.com/specials/promotion/freetier/esa?taskCode=25254&recordId=c856e61228828a0423417a767828d166",
+			destination:
+				"https://tianchi.aliyun.com/specials/promotion/freetier/esa?taskCode=25254&recordId=c856e61228828a0423417a767828d166",
 		},
 		"/s": {
 			status: 302,
@@ -171,7 +174,8 @@ export default defineConfig({
 		},
 		"/plan": {
 			status: 302,
-			destination: "https://acofork.notion.site/2e11e011d4e5800fa050e8f7cf448347",
+			destination:
+				"https://acofork.notion.site/2e11e011d4e5800fa050e8f7cf448347",
 		},
 	},
 	integrations: [
@@ -205,7 +209,6 @@ export default defineConfig({
 			iconDir: "public/icons",
 		}),
 		svelte(),
-		sitemap(),
 		expressiveCode({
 			themes: [expressiveCodeConfig.theme, expressiveCodeConfig.theme],
 			plugins: [

@@ -44,7 +44,7 @@ try {
         <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可
         <br>
         <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={url('rss.xml')}>RSS</a> /
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={url('sitemap-index.xml')}>网站地图</a> /
+        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={url('sitemap.xml')}>网站地图</a> /
         <!-- Below is the link that users can use to open Preferences Center to change their preferences. Do not modify the ID parameter. Place it where appropriate, style it as needed. -->
 
         <a class="transition link text-[var(--primary)] font-medium" href="#" id="open_preferences_center">更新您的Cookie</a>
@@ -60,16 +60,16 @@ try {
 
 		<!-- <a class="transition link text-[var(--primary)] font-medium inline-flex items-center" href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank"><img alt="" src="/favicon/foot-icp.png" width="16" height="16" class="h-4 mr-1">皖ICP备2025099787号-2</a>
         <br> -->
-        <div class="server-info-container flex flex-col items-center justify-center gap-1 mt-1">
+        <!-- <div class="server-info-container flex flex-col items-center justify-center gap-1 mt-1">
             什么？你问我TM的节点显示去哪了？拜托！我都不分流了看那玩意也没集贸用了，所以看集贸看！别看了！
-            <!-- Server info will be injected here -->
-        </div>
+            Server info will be injected here
+        </div>-->
          <!-- <a class="transition link text-[var(--primary)] font-medium inline-flex items-center" href="https://beian.mps.gov.cn/#/query/webSearch?code=34010302002608" target="_blank"><img alt="" src="/favicon/foot-ga.png" class="h-4 mr-1">皖公网安备34010302002608号</a>
         <br> 
     </div>
 </div>
 
-<!-- <script is:inline define:vars={{ serverConfig: siteConfig.server || [] }}>
+<script is:inline define:vars={{ serverConfig: siteConfig.server || [] }}>
     (() => {
         if (window.__footerServerInit) return;
         window.__footerServerInit = true;
