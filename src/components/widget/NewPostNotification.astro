@@ -221,12 +221,24 @@ import { Icon } from "astro-icon/components";
         const normalizeForDiffHtml = (html) => {
             const raw = normalizeRaw(html);
             if (!raw) return "";
-            // Avoid aggressive splitting. Split around block-level tags.
-            // 1. Split before opening block tags
-            let formatted = raw.replace(/(>)\s*(<(p|div|h[1-6]|ul|ol|li|blockquote|pre|table|article|section|header|footer))/gi, "$1\n$2");
-            // 2. Split after closing block tags
-            formatted = formatted.replace(/(<\/(p|div|h[1-6]|ul|ol|li|blockquote|pre|table|article|section|header|footer)>)\s*(<)/gi, "$1\n$3");
-            return formatted;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(`<div>${raw}</div>`, "text/html");
+            const root = doc.body.firstElementChild;
+            if (!root) return raw;
+
+            const lines = [];
+            for (const el of Array.from(root.children)) {
+                const htmlLine = String(el.outerHTML || "")
+                    .replace(/\r\n/g, "\n")
+                    .replace(/\r/g, "\n")
+                    .replace(/\n+/g, " ")
+                    .replace(/[ \t]+/g, " ")
+                    .trim();
+                if (!htmlLine) continue;
+                lines.push(htmlLine);
+            }
+
+            return lines.join("\n");
         };
 
         const cleanOld = normalizeForDiffHtml(oldText);

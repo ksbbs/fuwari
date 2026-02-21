@@ -49,12 +49,24 @@
 	function normalizeForDiffHtml(html) {
 		const raw = normalizeRaw(html);
 		if (!raw) return "";
-		// Avoid aggressive splitting. Split around block-level tags.
-		// 1. Split before opening block tags
-		let formatted = raw.replace(/(>)\s*(<(p|div|h[1-6]|ul|ol|li|blockquote|pre|table|article|section|header|footer))/gi, "$1\n$2");
-		// 2. Split after closing block tags
-		formatted = formatted.replace(/(<\/(p|div|h[1-6]|ul|ol|li|blockquote|pre|table|article|section|header|footer)>)\s*(<)/gi, "$1\n$3");
-		return formatted;
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(`<div>${raw}</div>`, "text/html");
+		const root = doc.body.firstElementChild;
+		if (!root) return raw;
+
+		const lines = [];
+		for (const el of Array.from(root.children)) {
+			const htmlLine = String(el.outerHTML || "")
+				.replace(/\r\n/g, "\n")
+				.replace(/\r/g, "\n")
+				.replace(/\n+/g, " ")
+				.replace(/[ \t]+/g, " ")
+				.trim();
+			if (!htmlLine) continue;
+			lines.push(htmlLine);
+		}
+
+		return lines.join("\n");
 	}
 
 	function openDb(name) {
@@ -107,7 +119,6 @@
 				const parser = new DOMParser();
 				const xml = parser.parseFromString(text, "text/xml");
 
-				// Try to detect the production origin from the RSS channel link
 				const channelLink = xml.querySelector("channel > link")?.textContent?.trim();
 				let prodOrigin = "";
 				if (channelLink) {
@@ -131,7 +142,6 @@
 						item.querySelector("content")?.textContent ||
 						"";
 
-					// Replace production domain with current domain if they differ
 					if (prodOrigin && prodOrigin !== currentOrigin) {
 						link = link.replaceAll(prodOrigin, currentOrigin);
 						if (rawGuid.includes(prodOrigin)) {
@@ -166,6 +176,7 @@
 		const a = normalizeForDiffHtml(oldHtml);
 		const b = normalizeForDiffHtml(newHtml);
 		if (!a || !b) return null;
+        
 		const diffs = Diff.diffLines(a, b);
 		const hasChanges = diffs.some((p) => p.added || p.removed);
 		if (!hasChanges) return null;
@@ -173,10 +184,6 @@
 	}
 
 	function computeDiffWithMeta(oldRecord, newRecord) {
-		// Priority: Content > Description > Title
-		// We want to support multiple diffs.
-		// Return an object with keys for each diff type if it exists.
-
 		const oldHtml = oldRecord.html || "";
 		const newHtml = newRecord.html || oldHtml;
 		
@@ -189,20 +196,17 @@
 		const result = {};
 		let hasChanges = false;
 
-		// 1. Check Content
 		const diffContent = computeDiff(oldHtml, newHtml);
 		if (diffContent) {
 			result.content = diffContent;
 			hasChanges = true;
 		}
 
-		// 2. Check Description
 		if (oldDesc !== newDesc) {
 			result.description = Diff.diffChars(oldDesc, newDesc);
 			hasChanges = true;
 		}
 
-		// 3. Check Title
 		if (oldTitle !== newTitle) {
 			result.title = Diff.diffChars(oldTitle, newTitle);
 			hasChanges = true;
@@ -210,9 +214,6 @@
 
 		if (!hasChanges) return null;
 		
-		// We return the result object which contains one or more diffs.
-		// diffType is now 'composite' or implied by keys.
-		// To maintain backward compatibility somewhat, we can set diff to the result object.
 		return { diff: result, diffType: 'composite' };
 	}
 
@@ -283,7 +284,6 @@
 		const body = document.createElement("div");
 		body.className = "p-4 overflow-auto max-h-[calc(75vh-3.25rem)]";
 
-		// Title Section
 		const titleLabel = document.createElement("div");
 		titleLabel.className = "text-[11px] text-black/50 dark:text-white/50 mb-1 font-bold";
 		titleLabel.textContent = "标题 (Title)";
@@ -299,7 +299,6 @@
 		newTitleInput.value = model.newTitle || "";
 		newTitleInput.placeholder = "新标题 (修改此处以测试标题Diff)";
 
-		// Description Section
 		const descLabel = document.createElement("div");
 		descLabel.className = "text-[11px] text-black/50 dark:text-white/50 mb-1 font-bold";
 		descLabel.textContent = "简介 (Description)";
