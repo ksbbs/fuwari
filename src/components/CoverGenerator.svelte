@@ -10,6 +10,20 @@ let fontSize = 64;
 let iconSize = 64;
 let gap = 20;
 
+// Font state
+let customFont: string | null = null;
+let customFontName = "";
+let fontWeight = 400;
+let localFonts: {
+	family: string;
+	fullName: string;
+	postscriptName: string;
+	style: string;
+}[] = [];
+let localFontSearchQuery = "";
+let isLoadingLocalFonts = false;
+let localFontError = "";
+
 // Color state
 // Default to a dark gray for text and white for background, user can customize
 // These are for the *canvas content*, not the UI.
@@ -185,6 +199,67 @@ function handleBgImageUpload(e: Event) {
 		reader.readAsDataURL(file);
 	}
 }
+
+function handleFontUpload(e: Event) {
+	const file = (e.target as HTMLInputElement).files?.[0];
+	if (file) {
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			const fontData = e.target?.result as string;
+			customFontName = file.name.replace(/\.[^/.]+$/, "");
+			customFont = fontData;
+			const fontFace = new FontFace(customFontName, fontData);
+			fontFace.load().then((loadedFace) => {
+				document.fonts.add(loadedFace);
+			});
+		};
+		reader.readAsArrayBuffer(file);
+	}
+}
+
+async function loadLocalFonts() {
+	if (!("queryLocalFonts" in window)) {
+		localFontError = "您的浏览器不支持本地字体访问 API (仅限 Chrome/Edge)";
+		return;
+	}
+	isLoadingLocalFonts = true;
+	localFontError = "";
+	try {
+		const fonts = await (window as any).queryLocalFonts();
+		localFonts = fonts.map((f: any) => ({
+			family: f.family,
+			fullName: f.fullName,
+			postscriptName: f.postscriptName,
+			style: f.style,
+		}));
+	} catch (e: any) {
+		if (e.name === "NotAllowedError") {
+			localFontError = "您拒绝了字体访问权限";
+		} else {
+			localFontError = "加载本地字体失败: " + e.message;
+		}
+	} finally {
+		isLoadingLocalFonts = false;
+	}
+}
+
+function selectLocalFont(font: {
+	family: string;
+	fullName: string;
+	postscriptName: string;
+	style: string;
+}) {
+	customFontName = font.family;
+	customFont = null;
+	localFonts = [];
+	localFontSearchQuery = "";
+}
+
+$: filteredLocalFonts = localFonts.filter(
+	(f) =>
+		f.family.toLowerCase().includes(localFontSearchQuery.toLowerCase()) ||
+		f.fullName.toLowerCase().includes(localFontSearchQuery.toLowerCase()),
+);
 
 // Pointer state for multi-touch
 let activePointers = new Map<number, { x: number; y: number }>();
@@ -591,7 +666,7 @@ function downloadLink(url: string, filename: string) {
 
         <!-- Content -->
         <foreignObject x="0" y="0" width="100%" height="100%" style="pointer-events: none;">
-            <div 
+<div 
                 xmlns="http://www.w3.org/1999/xhtml" 
                 style="
                     width: 100%; 
@@ -600,7 +675,8 @@ function downloadLink(url: string, filename: string) {
                     align-items: center; 
                     justify-content: center; 
                     gap: {gap}px;
-                    font-family: sans-serif;
+                    font-family: {customFontName || 'sans-serif'};
+                    font-weight: {fontWeight};
                 "
             >
                 <span style="
@@ -733,7 +809,7 @@ function downloadLink(url: string, filename: string) {
               </div>
           </div>
 
-          <div class="flex flex-col gap-2">
+<div class="flex flex-col gap-2">
                 <label class="text-sm font-bold text-gray-700 dark:text-gray-300">左侧文字</label>
                 <input type="text" bind:value={leftText} class="input-field w-full" />
             </div>
@@ -741,6 +817,78 @@ function downloadLink(url: string, filename: string) {
             <div class="flex flex-col gap-2">
                 <label class="text-sm font-bold text-gray-700 dark:text-gray-300">右侧文字</label>
                 <input type="text" bind:value={rightText} class="input-field w-full" />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-bold text-gray-700 dark:text-gray-300">自定义字体</label>
+                <div class="relative">
+                    <input type="file" accept=".ttf,.otf,.woff,.woff2" on:change={handleFontUpload} class="hidden" id="font-upload" />
+                    <label for="font-upload" class="flex items-center justify-center w-full px-4 py-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:border-[var(--primary)] hover:bg-[var(--primary)]/5 transition-all group">
+                        <div class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 group-hover:text-[var(--primary)]">
+                            <Icon icon="material-symbols:font-download" class="w-5 h-5" />
+                            <span class="text-xs">{customFontName ? customFontName : '点击上传字体'}</span>
+                        </div>
+                    </label>
+                    {#if customFontName}
+                        <button 
+                            on:click={() => { customFont = null; customFontName = ""; }}
+                            class="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-sm"
+                            title="移除字体"
+                        >
+                            <Icon icon="material-symbols:close" class="w-3 h-3" />
+                        </button>
+                    {/if}
+                </div>
+                <div class="flex gap-2 mt-1">
+                    <button 
+                        on:click={loadLocalFonts}
+                        disabled={isLoadingLocalFonts}
+                        class="flex-1 flex items-center justify-center gap-1 px-2 py-1 text-xs border border-[var(--line-color)] rounded hover:bg-[var(--btn-regular-bg)] transition-colors text-gray-700 dark:text-gray-300 disabled:opacity-50"
+                    >
+                        {#if isLoadingLocalFonts}
+                            <Icon icon="line-md:loading-twotone-loop" class="w-4 h-4" />
+                        {:else}
+                            <Icon icon="material-symbols:computer" class="w-4 h-4" />
+                        {/if}
+                        <span>读取本地字体</span>
+                    </button>
+                </div>
+                {#if localFontError}
+                    <p class="text-xs text-red-500">{localFontError}</p>
+                {/if}
+                {#if localFonts.length > 0}
+                    <div class="space-y-2 mt-2 p-2 border border-[var(--line-color)] rounded-lg">
+                        <input 
+                            type="text" 
+                            bind:value={localFontSearchQuery}
+                            placeholder="搜索字体..."
+                            class="input-field w-full text-xs !py-1"
+                        />
+                        <div class="max-h-40 overflow-y-auto space-y-1">
+                            {#each filteredLocalFonts as font (font.postscriptName)}
+                                <button 
+                                    on:click={() => selectLocalFont(font)}
+                                    class="w-full text-left px-2 py-1 text-xs hover:bg-[var(--btn-regular-bg)] rounded transition-colors text-gray-700 dark:text-gray-300"
+                                    style="font-family: '{font.family}'"
+                                >
+                                    <span class="font-medium">{font.family}</span>
+                                    <span class="text-gray-400 ml-1">{font.style}</span>
+                                </button>
+                            {/each}
+                        </div>
+                        <button 
+                            on:click={() => { localFonts = []; localFontSearchQuery = ""; }}
+                            class="w-full text-xs text-gray-400 hover:text-red-500 transition-colors"
+                        >
+                            关闭
+                        </button>
+                    </div>
+                {/if}
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between text-sm"><label class="text-gray-700 dark:text-gray-300 font-bold">字体粗细</label> <span class="text-gray-500 dark:text-gray-400 font-mono">{fontWeight}</span></div>
+                <input type="range" bind:value={fontWeight} min="100" max="900" step="100" class="range-slider" />
             </div>
 
             <div class="flex flex-col gap-2">
