@@ -64,8 +64,7 @@ const mainPanelTop = siteConfig.banner.enable
 <div class="relative w-full z-30 pointer-events-none" style=`margin-top: ${mainPanelTop}`>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class="relative max-w-[var(--page-width)] mx-auto pointer-events-auto">
-        <div id="main-grid" class="transition duration-700 w-full left-0 right-0 grid grid-cols-[17.5rem_auto] grid-rows-[auto_auto_auto] lg:grid-rows-[auto_1fr]
-    mx-auto gap-4 px-0 md:px-4"
+        <div id="main-grid" class="transition duration-700 w-full left-0 right-0 grid grid-cols-[17.5rem_auto] grid-rows-[auto_auto_auto] lg:grid-rows-[auto_1fr] md:grid-rows-[auto_1fr] mx-auto gap-4 px-0 md:px-4"
         >
             <!-- Banner image credit -->
             {hasBannerCredit && <a href={siteConfig.banner.credit.url} id="banner-credit" target="_blank" rel="noopener" aria-label="Visit image source"
@@ -81,9 +80,9 @@ const mainPanelTop = siteConfig.banner.enable
             </a>}
 
 
-            <SideBar class="mb-4 row-start-2 col-span-2 lg:row-start-1 lg:col-span-1 lg:max-w-[17.5rem] onload-animation" headings={headings}></SideBar>
+            <SideBar class="mb-4 row-start-2 col-span-2 lg:row-start-1 lg:col-span-1 md:row-start-1 md:col-span-1 lg:max-w-[17.5rem] md:max-w-[17.5rem] onload-animation" headings={headings}></SideBar>
 
-            <main id="swup-container" class="transition-swup-fade row-start-1 col-span-2 lg:row-start-1 lg:col-span-1 overflow-visible min-w-0">
+            <main id="swup-container" class="transition-swup-fade row-start-1 col-span-2 lg:row-start-1 lg:col-span-1 md:row-start-1 md:col-span-1 overflow-visible min-w-0">
                 <div id="content-wrapper" class="onload-animation">
                     <!-- the overflow-hidden here prevent long text break the layout-->
                     <!-- make id different from windows.swup global property -->
@@ -92,7 +91,7 @@ const mainPanelTop = siteConfig.banner.enable
                 </div>
             </main>
 
-            <div class="footer col-span-2 row-start-3 lg:col-span-1 lg:col-start-2 lg:row-start-2 onload-animation">
+            <div class="footer col-span-2 row-start-3 lg:col-span-1 lg:col-start-2 lg:row-start-2 md:col-span-1 md:col-start-2 md:row-start-2 onload-animation">
                 <Footer></Footer>
             </div>
         </div>
@@ -102,10 +101,10 @@ const mainPanelTop = siteConfig.banner.enable
 </div>
 
 <!-- The things that should be under the banner, only the TOC for now -->
-<div class="absolute w-full z-0 hidden 2xl:block">
+<div class="absolute w-full z-0 hidden 2xl:block xl:block">
     <div class="relative max-w-[var(--page-width)] mx-auto">
         <!-- TOC component -->
-        {siteConfig.toc.enable && <div id="toc-wrapper" class:list={["hidden lg:block transition absolute top-0 -right-[var(--toc-width)] w-[var(--toc-width)] flex items-center",
+        {siteConfig.toc.enable && <div id="toc-wrapper" class:list={["hidden lg:block md:block transition absolute top-0 -right-[var(--toc-width)] w-[var(--toc-width)] flex items-center",
             {"toc-hide": siteConfig.banner.enable}]}
         >
             <div id="toc-inner-wrapper" class="fixed top-14 w-[var(--toc-width)] h-[calc(100vh_-_20rem)] overflow-y-scroll overflow-x-hidden">
