@@ -47,7 +47,7 @@ const mainPanelTop = siteConfig.banner.enable
 <!-- Navbar -->
 <slot slot="head" name="head"></slot>
 <div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-4 md:px-4 mx-auto" class:list={[""]}>
-    <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
+    <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all" style="top: var(--navbar-offset, 0px);">
         <Navbar></Navbar>
     </div>
 </div>
@@ -163,5 +163,23 @@ const mainPanelTop = siteConfig.banner.enable
     // Run on load and after Swup navigation
     document.addEventListener('DOMContentLoaded', setupCodeFolding);
     document.addEventListener('swup:contentReplaced', setupCodeFolding);
+
+    // Google Ads Anchor Ad support
+    function initGoogleAnchorAdSupport() {
+        const updateNavbarOffset = () => {
+            const bodyPaddingTop = document.body.style.paddingTop;
+            if (bodyPaddingTop && bodyPaddingTop !== '0px') {
+                document.documentElement.style.setProperty('--navbar-offset', bodyPaddingTop);
+            } else {
+                document.documentElement.style.removeProperty('--navbar-offset');
+            }
+        };
+
+        const observer = new MutationObserver(updateNavbarOffset);
+        observer.observe(document.body, { attributes: true, attributeFilter: ['style'] });
+        updateNavbarOffset();
+    }
+    document.addEventListener('DOMContentLoaded', initGoogleAnchorAdSupport);
+    document.addEventListener('swup:contentReplaced', initGoogleAnchorAdSupport);
 </script>
 </Layout>
