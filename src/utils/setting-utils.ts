@@ -2,7 +2,6 @@ import { expressiveCodeConfig } from "@/config";
 import type { LIGHT_DARK_MODE } from "@/types/config";
 import {
 	DARK_MODE,
-	DEFAULT_THEME,
 } from "@constants/constants.ts";
 
 export function getDefaultHue(): number {
