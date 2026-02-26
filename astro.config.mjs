@@ -199,15 +199,6 @@ export default defineConfig({
 			globalInstance: true,
 		}),
 		icon({
-			include: {
-				"fa6-brands": ["*"],
-				"fa6-regular": ["*"],
-				"fa6-solid": ["*"],
-				mingcute: ["*"],
-				"simple-icons": ["*"],
-				"material-symbols-light": ["*"],
-				"material-symbols": ["*"],
-			},
 			iconDir: "public/icons",
 		}),
 		svelte(),
