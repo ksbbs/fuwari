@@ -1,5 +1,5 @@
 ---
-enable: true
+enable: false
 level: happy
 ---
 我们已经通过 Google Adsense 审核！不出意外，在未开启广告拦截器的情况下，应该已经可以看到广告了
