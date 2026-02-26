@@ -71,6 +71,7 @@ let hue = 250;
 // Icon Background State
 let iconBgEnabled = false;
 let iconBgRadius = 20; // 0 to 50 (50% is circle)
+let iconRadius = 0; // New: radius for the icon itself
 let iconBgColor = "#000000";
 let iconBgOpacity = 0.2;
 let iconBgBlur = 0;
@@ -94,6 +95,7 @@ let linkScale = true;
 let baseScale = 100; // Percentage base for linked scaling
 
 let iconSvg = "";
+let localIcon: string | null = null;
 let svgContainer: SVGSVGElement;
 
 // Background Image State
@@ -423,8 +425,22 @@ function onSearchInput(e: Event) {
 	}
 }
 
+function handleLocalIconUpload(e: Event) {
+	const file = (e.target as HTMLInputElement).files?.[0];
+	if (file) {
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			localIcon = e.target?.result as string;
+			iconName = "本地图片";
+			iconSvg = ""; // Clear iconify SVG if exists
+		};
+		reader.readAsDataURL(file);
+	}
+}
+
 function selectIcon(icon: string) {
 	iconName = icon;
+	localIcon = null; // Clear local icon if selecting from library
 	searchResults = [];
 	searchQuery = "";
 }
@@ -677,7 +693,7 @@ function downloadLink(url: string, filename: string) {
                     white-space: nowrap;
                 ">{leftText}</span>
                 
-                {#if iconSvg}
+                {#if iconSvg || localIcon}
                     <div style="
                         width: {iconSize + iconBgPadding * 2}px; 
                         height: {iconSize + iconBgPadding * 2}px; 
@@ -695,8 +711,16 @@ function downloadLink(url: string, filename: string) {
                             color: {useOriginalIconColor ? 'inherit' : iconColor}; 
                             filter: drop-shadow({iconShadow.x}px {iconShadow.y}px {iconShadow.blur}px {hexToRgba(iconShadow.color, iconShadow.alpha)});
                             display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: {iconRadius}%;
+                            overflow: hidden;
                         ">
-                            {@html iconSvg}
+                            {#if localIcon}
+                                <img src={localIcon} style="width: 100%; height: 100%; object-fit: contain;" alt="Local Icon" />
+                            {:else}
+                                {@html iconSvg}
+                            {/if}
                         </div>
                     </div>
                 {/if}
@@ -882,20 +906,40 @@ function downloadLink(url: string, filename: string) {
             </div>
 
             <div class="flex flex-col gap-2">
-                <label class="text-sm font-bold text-gray-300">图标搜索</label>
-                <div class="relative">
-                    <input 
-                        type="text" 
-                        value={searchQuery} 
-                        on:input={onSearchInput}
-                        placeholder="输入关键词自动搜索..." 
-                        class="input-field w-full" 
-                    />
-                    {#if isSearching}
-                        <div class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                            <Icon icon="line-md:loading-twotone-loop" class="w-5 h-5" />
-                        </div>
-                    {/if}
+                <label class="text-sm font-bold text-gray-300">图标设置</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="relative">
+                        <input type="file" accept="image/*" on:change={handleLocalIconUpload} class="hidden" id="icon-upload" />
+                        <label for="icon-upload" class="flex items-center justify-center w-full px-2 py-2 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:border-[var(--primary)] hover:bg-[var(--primary)]/5 transition-all group h-10">
+                            <div class="flex items-center gap-1 text-gray-400 group-hover:text-[var(--primary)]">
+                                <Icon icon="material-symbols:image-outline" class="w-4 h-4" />
+                                <span class="text-[10px] whitespace-nowrap">{localIcon ? '更换图片' : '上传图标'}</span>
+                            </div>
+                        </label>
+                        {#if localIcon}
+                            <button 
+                                on:click={() => { localIcon = null; iconName = ""; }}
+                                class="absolute -top-1 -right-1 p-0.5 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-sm z-10"
+                                title="移除本地图标"
+                            >
+                                <Icon icon="material-symbols:close" class="w-3 h-3" />
+                            </button>
+                        {/if}
+                    </div>
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            value={searchQuery} 
+                            on:input={onSearchInput}
+                            placeholder="搜索库..." 
+                            class="input-field w-full text-xs h-10 !py-1" 
+                        />
+                        {#if isSearching}
+                            <div class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
+                                <Icon icon="line-md:loading-twotone-loop" class="w-4 h-4" />
+                            </div>
+                        {/if}
+                    </div>
                 </div>
                 
                 {#if searchResults.length > 0}
@@ -943,6 +987,10 @@ function downloadLink(url: string, filename: string) {
             <div class="flex flex-col gap-2">
                 <div class="flex justify-between text-sm"><label class="text-gray-300 font-bold">图标大小</label> <span class="text-gray-400 font-mono">{iconSize}px</span></div>
                 <input type="range" value={iconSize} on:input={handleIconSizeChange} min="20" max="700" class="range-slider" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between text-sm"><label class="text-gray-300 font-bold">图标圆角</label> <span class="text-gray-400 font-mono">{iconRadius}%</span></div>
+                <input type="range" bind:value={iconRadius} min="0" max="50" class="range-slider" />
             </div>
             <div class="flex flex-col gap-2">
                 <div class="flex justify-between text-sm"><label class="text-gray-300 font-bold">间距</label> <span class="text-gray-400 font-mono">{gap}px</span></div>
