@@ -825,6 +825,24 @@ window.onresize = () => {
 import { Fancybox } from "@fancyapps/ui"
 import "@fancyapps/ui/dist/fancybox/fancybox.css"
 
+const fancyboxOptions = {
+	wheel: 'zoom',
+	clickContent: 'close',
+	dblclickContent: 'zoom',
+	click: 'close',
+	dblclick: 'zoom',
+	Panels: {
+		display: ['counter', 'zoom']
+	},
+	Images: {
+		panning: true,
+		zoom: true,
+		protect: false
+	}
+}
+
+Fancybox.bind(".custom-md img, #post-cover img", fancyboxOptions)
+
 const setup = () => {
 	const cleanupFancybox = () => {
 		try {
@@ -842,38 +860,8 @@ const setup = () => {
 		document.body.style.removeProperty('overflow')
 	}
 
-	Fancybox.bind(".custom-md img, #post-cover img", {
-		wheel: 'zoom',
-		clickContent: 'close',
-		dblclickContent: 'zoom',
-		click: 'close',
-		dblclick: 'zoom',
-		Panels: {
-			display: ['counter', 'zoom']
-		},
-		Images: {
-			panning: true,
-			zoom: true,
-			protect: false
-		}
-	})
-
 	window.swup.hooks.on("page:view", () => {
-		Fancybox.bind(".custom-md img, #post-cover img", {
-			wheel: 'zoom',
-			clickContent: 'close',
-			dblclickContent: 'zoom',
-			click: 'close',
-			dblclick: 'zoom',
-			Panels: {
-				display: ['counter', 'zoom']
-			},
-			Images: {
-				panning: true,
-				zoom: true,
-				protect: false
-			}
-		})
+		Fancybox.bind(".custom-md img, #post-cover img", fancyboxOptions)
 	})
 
 	window.swup.hooks.on(

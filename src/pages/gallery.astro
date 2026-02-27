@@ -322,6 +322,35 @@ import { Icon } from "astro-icon/components";
 			loadMore(24);
 		}
 
+		const fancyboxOptions = {
+			groupAll: false, // 明确禁止分组
+			// 配置项参考主站逻辑
+			Toolbar: {
+				display: {
+					left: ["infobar"],
+					middle: [
+						"zoomIn",
+						"zoomOut",
+						"toggle1to1",
+						"rotateCCW",
+						"rotateCW",
+						"flipX",
+						"flipY",
+					],
+					right: ["slideshow", "fullscreen", "download", "thumbs", "close"],
+				},
+			},
+			Thumbs: {
+				type: "classic",
+			},
+			// 每一张独立展示，不显示前后切换箭头
+			Carousel: {
+				Navigation: false,
+			},
+		};
+
+		Fancybox.bind("[data-fancybox]", fancyboxOptions);
+
 		async function init() {
 			const galleryEl = document.getElementById("gallery");
 			if (!galleryEl) return;
@@ -351,34 +380,6 @@ import { Icon } from "astro-icon/components";
 
 			setupInfiniteLoad();
 			setupResize();
-
-			// 绑定 Fancybox
-			Fancybox.bind("[data-fancybox]", {
-				groupAll: false, // 明确禁止分组
-				// 配置项参考主站逻辑
-				Toolbar: {
-					display: {
-						left: ["infobar"],
-						middle: [
-							"zoomIn",
-							"zoomOut",
-							"toggle1to1",
-							"rotateCCW",
-							"rotateCW",
-							"flipX",
-							"flipY",
-						],
-						right: ["slideshow", "fullscreen", "download", "thumbs", "close"],
-					},
-				},
-				Thumbs: {
-					type: "classic",
-				},
-				// 每一张独立展示，不显示前后切换箭头
-				Carousel: {
-					Navigation: false,
-				},
-			});
 		}
 
 		function initIfPresent() {
