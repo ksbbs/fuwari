@@ -7,39 +7,32 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Sync to CNB (No History via /tmp)
+      - name: Sync via ZIP (No Local History)
         env:
           CNB_TOKEN: ${{ secrets.GIT_PASSWORD }}
           CNB_URL: "cnb.cool/2x.nz/fuwari.git"
+          # 显式使用 main.zip
+          REPO_ZIP_URL: "https://github.com/afoim/fuwari/archive/refs/heads/main.zip"
         run: |
-          # 1. 定义临时目录并拷贝文件（不带 .git）
-          SYNC_DIR="/tmp/fuwari_sync_$(date +%s)"
-          mkdir -p "$SYNC_DIR"
+          # 1. 下载 ZIP
+          curl -L -q "$REPO_ZIP_URL" -o repo.zip
           
-          # 使用 -q 隐藏拷贝过程
-          rsync -aq --exclude='.git' ./ "$SYNC_DIR/"
+          # 2. 解压并进入目录
+          unzip -q repo.zip
+          # 解压出的目录通常是 {repo_name}-{branch_name}
+          DIR_NAME=$(find . -maxdepth 1 -type d -name "fuwari-*" | head -n 1)
+          cd "$DIR_NAME"
           
-          cd "$SYNC_DIR"
-          
-          # 2. 初始化新的 Git 仓库
+          # 3. 初始化 Git 并配置
           git init -q
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # 3. 准备提交
-          BRANCH_NAME=${GITHUB_REF_NAME}
-          git checkout -b "$BRANCH_NAME" -q
-          git add .
-          # 使用 -q 隐藏 "create mode" 列表
-          git commit -q -m "sync: commit from GitHub (${GITHUB_SHA:0:7})"
-          
-          # 4. 改写远程仓库为 CNB 并强制提交
+          # 4. 改写远程仓库为 CNB
           git remote add origin "https://cnb:${CNB_TOKEN}@${CNB_URL}"
-          # 使用 -q 隐藏推送进度
-          git push -f -q origin "$BRANCH_NAME"
           
-          # 5. 清理临时目录
-          rm -rf "$SYNC_DIR"
+          # 5. 创建同步提交并强制推送
+          git checkout -b main -q
+          git add .
+          git commit -q -m "sync: commit from GitHub zip"
+          git push -f -q origin main
