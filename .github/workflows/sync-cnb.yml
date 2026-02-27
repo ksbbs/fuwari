@@ -7,15 +7,29 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
-      - name: Sync to CNB Repository
-        uses: docker://tencentcom/git-sync
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync to CNB (No History)
         env:
-          PLUGIN_TARGET_URL: "https://cnb.cool/2x.nz/fuwari.git"
-          PLUGIN_AUTH_TYPE: "https"
-          PLUGIN_USERNAME: "cnb"
-          PLUGIN_PASSWORD: ${{ secrets.GIT_PASSWORD }}
-          PLUGIN_FORCE: "true"
+          CNB_TOKEN: ${{ secrets.GIT_PASSWORD }}
+          CNB_URL: "cnb.cool/2x.nz/fuwari.git"
+        run: |
+          # 1. 配置 Git 用户
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 2. 准备同步环境
+          # 记录当前分支名
+          BRANCH_NAME=${GITHUB_REF_NAME}
+          
+          # 3. 移除现有 Git 历史，重新初始化
+          rm -rf .git
+          git init
+          git checkout -b $BRANCH_NAME
+          git add .
+          git commit -m "sync: commit from GitHub (${GITHUB_SHA:0:7})"
+          
+          # 4. 强制推送至 CNB
+          git remote add origin "https://cnb:${CNB_TOKEN}@${CNB_URL}"
+          git push -f origin $BRANCH_NAME
