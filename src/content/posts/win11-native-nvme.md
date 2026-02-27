@@ -31,6 +31,9 @@ lang: ""
 > [!caution]
 > 数据无价，谨慎操作
 
+> [!warning]
+> 操作之前请确保你的磁盘使用 **微软官方** 的驱动，而不是 **盘厂驱动** 或 **启用了 Intel VMD** ，否则操作后将无法进入系统
+
 前往 https://github.com/thebookisclosed/ViVe 下载 **ViVeTool** 
 
 接下来查看你的系统版本号，不同版本需要执行不同命令：

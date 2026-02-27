@@ -8,8 +8,8 @@ category: '记录'
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> Cloudflare带宽联盟允许用户通过其CDN代理访问阿里云OSS、腾讯云COS等对象存储服务，使经Cloudflare出口的流量免收源站带宽费，实现“白嫖”流量。使用时需将域名DNS指向Cloudflare，开启代理（小黄云），并确保源站Endpoint不被公开。若源站直接暴露，流量将绕过CDN，产生费用。目前支持服务及节省金额可查官网，部分服务商如阿里云还提供5G内存储免费额度。
+> [!ai] gemini-3-flash-preview
+> Cloudflare带宽联盟通过代理模式免除或降低成员云服务的传输费用。用户需开启Cloudflare代理并严防源站泄露，建议配合私有访问设置，以规避非代理产生的流量扣费。
 
 
 # 这是什么

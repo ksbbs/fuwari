@@ -6,8 +6,8 @@ image: ../assets/images/cookie-consent.webp
 draft: false
 lang: ""
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 使用 Cookie Consent Banner 可快速实现用户对网站追踪器的控制，无需自建脚本或 Service Worker。通过其官网配置，可设置网站名称、样式、语言及隐私政策链接，随后导入各追踪器（如 GA、百度统计等）并分类为四类（必开、广告、分析、功能），最终将生成的 JS 代码插入页面 `<body>` 后即可生效。首次访问弹出 Cookie 同意弹窗，用户可选择全部允许、拒绝或进入偏好中心调整。偏好中心提供简明说明与各类型 Cookie 功能描述，并链接至隐私政策页，提升透明度与合规性。
+> [!ai] gemini-3-flash-preview
+> CookieConsent.com提供符合GDPR和ePrivacy要求的脚本管理方案。操作流程包括：选择授权逻辑、配置站点信息与隐私政策、将现有追踪脚本分类导入并生成JS代码。用户将代码插入网站`<body>`后，访客即可通过弹窗自主控制四类Cookie的开启状态。该方案支持通过设置ID为`open_preferences_center`的按钮供用户随时调整偏好，无需编写额外的复杂代码。
 
 # 前言
 你的网站是否有很多的跟踪器？如 **Google Analytics、Google Adsense、Microsoft Clarity、百度统计** 等等？

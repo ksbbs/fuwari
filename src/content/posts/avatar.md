@@ -6,8 +6,9 @@ image: ../assets/images/avatar.webp
 draft: false
 lang: ""
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 该文为个人收集的各平台头像接口汇总，标注是否支持Web访问及安全校验情况，指出多数平台因缺乏Referer校验或SSL保护，可直接在网页中嵌入展示；同时分析防盗链措施有效性，强调CORS、Referer白名单无效，建议采用Cookie认证或CORP头保护资源，避免被他人滥用。
+> [!ai] gemini-3-flash-preview
+> 多数APP头像接口因未严格执行SSL或身份校验，可依据W3C规范直接跨域引用，而微软及部分社交应用则通过Cookie或非Web协议限制访问。Referer白名单防盗链手段因可伪造而失效。建议采用基于Cookie的后端处理、Accept请求头白名单校验或CORP（Cross-Origin-Resource-Policy）策略以实现有效的静态资源保护。
+
 
 
 # 这是什么？

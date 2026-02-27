@@ -6,8 +6,8 @@ image: ../assets/images/deepwiki.png
 draft: false
 lang: ""
 ---
-> [!ai] qwen/qwen3-vl-8b
-> DeepWiki 是一个免费的AI工具，自动为流行GitHub仓库生成可交互的Wiki，通过AI分析代码并创建专属文档。用户可通过在README添加特定标记申请收录，每周更新一次。已收录仓库可在DeepWiki官网搜索查看，也可嵌入网站或应用供用户直接提问，无需手动搭建知识库。
+> [!ai] gemini-3-flash-preview
+> DeepWiki利用AI自动生成GitHub仓库Wiki。用户可查询收录状态，通过在README添加徽章实现每周定期更新。该服务支持作为集成知识库或辅助快速上手项目。
 
 # 这是什么？
 

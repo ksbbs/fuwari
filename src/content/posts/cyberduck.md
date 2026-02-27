@@ -8,8 +8,8 @@ tags: [Cyberduck, 对象存储]
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 使用 Cyberduck 替代 AList 后，可直接连接 Cloudflare R2 对象存储，无需中转，上传效率提升，支持 S3 统计与 SFTP 文件传输，简化工作流。
+> [!ai] gemini-3-flash-preview
+> Cyberduck是直连S3、R2及SFTP的跨平台存储浏览器，无需部署中转且自带统计功能，可提升管理效率；其姊妹软件Mountain Duck支持将云存储映射为本地磁盘。
 
 
 # 前情提要

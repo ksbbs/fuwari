@@ -6,8 +6,9 @@ image: ../assets/images/bitwarden.png
 draft: false
 lang: ""
 ---
-> [!ai] qwen/qwen3-vl-8b
-> Bitwarden 是一个开源密码管理工具，支持端到端加密存储登录信息（含密码、TOTP、通行密钥），并可自动填充登录。Bitwarden.com 是其官方云服务，免费版禁止自动填充 TOTP，但允许存储；限制仅前端阻止，可通过第三方客户端（如 Android 的 KeyGuard 或浏览器插件 Sunsetvault）绕过，使其支持 TOTP 自动填充。该方法非官方，不保证长期可用，且需注意：勿用 Bitwarden.com 管理自身登录凭据，主密码无法重置，建议备份关键验证信息。只要设备或服务任一可用，密码永不丢失。
+> [!ai] gemini-3-flash-preview
+> Bitwarden.com免费版仅在前端限制TOTP自动填充。用户无需自建服务器，可通过Android端KeyGuard或浏览器插件Sunsetvault等第三方客户端绕过前端校验，将账户识别为VIP以激活该功能。该方案能直接利用官方云服务及安全日志，但属于非官方绕过，用户必须妥善保管无法找回的主密码，并建议将Bitwarden自身的登录凭据存储在外部以防访问受限。
+
 
 # Bitwarden以及Bitwarden.com是什么
 

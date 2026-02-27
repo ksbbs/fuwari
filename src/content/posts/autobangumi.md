@@ -7,8 +7,9 @@ published: 2025-02-25
 tags: [AutoBangumi]
 title: 教你搭建自己的番剧库，实现自动追番！
 ---
-> [!ai] qwen/qwen3-vl-8b
-> AutoBangumi 自动抓取新番并推送至 qBittorrent 下载，配合规范重命名与媒体库（如Plex/飞牛影视）实现自动化追番。需安装 qBittorrent（含WebUI）、AutoBangumi（Docker部署）、订阅蜜柑计划番剧，配置下载器与RSS源即可。旧番或完结番可手动从资源站下载，重命名格式为“番剧名/Season X/E01”，通过脚本自动处理。Plex或飞牛影视用于观看，支持远程访问。
+> [!ai] gemini-3-flash-preview
+> 通过Docker部署AutoBangumi并关联qBittorrent，利用蜜柑计划RSS实现新番自动订阅、下载与自动重命名。旧番需手动下载并使用Episode-ReName脚本按TMDB标准规范命名剧集文件。最终由Plex或飞牛影视挂载媒体库，完成元数据刮削后即可观看。
+
 
 
 # 实现流程：

@@ -9,8 +9,8 @@ tags:
 - USTC
 title: 绕过USTC的浏览器JS验证
 ---
-> [!ai] qwen/qwen3-vl-8b
-> USTC镜像站对大文件下载实施JS验证，实际是通过向Cookie写入用户IP并重定向实现的，非复杂JS逻辑；使用wget可伪造Cookie与User-Agent绕过，成功下载。
+> [!ai] gemini-3-flash-preview
+> USTC镜像站在下载大文件时采用JavaScript验证机制，要求浏览器将访问IP写入名为addr的Cookie，否则返回403错误。对于wget等不支持JS的工具，可以通过在请求头中手动添加该IP Cookie并伪造浏览器User-Agent来绕过验证并成功下载。
 
 # 前言
 

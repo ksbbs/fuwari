@@ -8,8 +8,8 @@ category: '记录'
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 无CSP防护的网站会因直接使用innerHTML插入用户输入而触发XSS攻击，如`<img src=x onerror=alert('XSS攻击成功')>`可弹窗或窃取数据；设置CSP策略如`default-src 'self'`可阻断内联脚本执行，防止此类攻击，保障数据安全。
+> [!ai] gemini-3-flash-preview
+> 网站通过innerHTML直接插入未过滤的URL参数会导致XSS漏洞，攻击者可借此执行恶意脚本窃取Cookie等敏感信息。配置严格的Content Security Policy（CSP）策略（如`script-src 'self'`）能有效拦截未经授权的内联脚本执行，是预防此类攻击的核心技术手段。保障数据安全需站点部署严谨的CSP策略，并要求用户谨慎访问不明链接。
 
 
 # 举个例子吧！

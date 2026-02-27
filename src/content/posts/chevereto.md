@@ -8,8 +8,8 @@ category: '教程'
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 使用 PHP 8.1+ 和 MySQL 8.0+ 安装 Chevereto，上传解压后按 Apache（默认）或 Nginx（需配置 nginx.txt）伪静态规则，启用 fileinfo、imagemagick、exif 扩展，宝塔用户需禁用 putenv/proc_open，访问站点启动安装。调试问题可开启调试模式或查 PHP 错误日志。示例站：https://chevereto.php.afo.im/upload。
+> [!ai] gemini-3-flash-preview
+> 安装Chevereto 4.3.6 Pro需PHP 8.1+（含fileinfo、imagemagick、exif扩展并取消putenv、proc_open禁用）及MySQL 8.0+环境。将源码解压至根目录，按环境配置Apache或Nginx伪静态后执行网页安装向导，遇错通过调试模式或错误日志排障。
 
 
 # 视频教程

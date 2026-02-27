@@ -8,8 +8,9 @@ tags: [重定向, Astro]
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> Astro v3 支持原生重定向配置，通过 `astro.config.mjs` 设置如 `/tit` → `/posts/pin` 的 302 跳转。SSG 模式下默认生成 HTML 重定向，非所有适配器支持透传规则，推荐使用构建平台原生重定向功能（如 Vercel 的 `vercel.json`）。
+> [!ai] gemini-3-flash-preview
+> Astro v3 支持原生重定向配置。SSG 模式建议通过适配器或构建服务商实现服务器级重定向。
+
 
 
 # 正式开始

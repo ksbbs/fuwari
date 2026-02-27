@@ -6,8 +6,9 @@ image: ../assets/images/auto-pr-link-12.png
 draft: false
 lang: ""
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 友链PR常因格式错误被拒，手动处理易打断正事；通过GitHub Action可自动化验证回链并做所有权校验，虽架构复杂需多次调试，但用标签管理流程可快速定位问题，结合PAT绕过权限限制，最终实现低维护成本的自动化友链审核。
+> [!ai] gemini-3-flash-preview
+> 针对友链申请中JSON格式不规范及人工审核繁琐的问题，利用GitHub Action实现自动化处理流程。该方案通过回链检测进行所有权验证，并采用GitHub标签实时跟踪任务进度与定位错误，支持异常处理下的流程续接。为解决外部仓库PR的合并权限限制，需配置个人访问令牌（PAT）替代默认TOKEN，从而实现友链申请从验证到合并的全全自动管理。
+
 
 # 起因
 
