@@ -11,6 +11,7 @@ import { Icon } from "astro-icon/components";
 import { gitHubEditConfig, licenseConfig } from "src/config";
 import PostDiffInArticle from "@components/widget/PostDiffInArticle.astro";
 import DiffDebugEditor from "@components/widget/DiffDebugEditor.astro";
+import PostUpdateNotice from "@components/widget/PostUpdateNotice.astro";
 import PostMetadata from "../../components/PostMeta.astro";
 import ImageWrapper from "../../components/misc/ImageWrapper.astro";
 import { profileConfig, siteConfig, umamiConfig } from "../../config";
@@ -33,6 +34,7 @@ const { Content, headings } = await entry.render();
 const { remarkPluginFrontmatter } = await entry.render();
 
 const history = getPostHistory(entry.id);
+const lastUpdateTime = history[0]?.date || entry.data.updated || entry.data.published;
 
 const jsonLd = [
 	{
@@ -151,6 +153,8 @@ const jsonLd = [
 
 			<PostDiffInArticle />
 			<DiffDebugEditor />
+
+			<PostUpdateNotice lastUpdated={lastUpdateTime} />
 
             <Markdown class="mb-6 markdown-content onload-animation">
                 <Content />
