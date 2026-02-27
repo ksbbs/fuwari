@@ -184,9 +184,6 @@ async function processFile(filePath, type) {
              try {
                  fs.unlinkSync(filePath);
                  console.log(`${colors.red}DELETED file: ${filePath}${colors.reset}`);
-                 // Add to stats for report
-                 if (!stats.deleted) stats.deleted = [];
-                 stats.deleted.push({ type, name, file: path.basename(filePath), reason: `URL failed: ${urlResult.status}` });
              } catch (delErr) {
                  console.error(`${colors.red}Failed to delete file: ${delErr.message}${colors.reset}`);
              }
@@ -282,24 +279,18 @@ async function main() {
         if (process.env.GITHUB_STEP_SUMMARY) {
             const summaryPath = process.env.GITHUB_STEP_SUMMARY;
             let summary = '## ❌ Link Check Failures\n\n';
+            summary += 'The following issues were detected during the link check process:\n\n';
             
-            if (stats.deleted && stats.deleted.length > 0) {
-                summary += '### 🗑️ Deleted Files\n';
-                summary += 'The following files were automatically deleted because their main URL was inaccessible:\n\n';
-                summary += '| Type | Name | File | Reason |\n';
-                summary += '|------|------|------|--------|\n';
-                stats.deleted.forEach(del => {
-                    summary += `| ${del.type} | ${del.name} | ${del.file} | ${del.reason} |\n`;
-                });
-                summary += '\n';
-            }
-
-            summary += '### ⚠️ Other Errors\n';
-            summary += '| Type | Name | Field | Error | URL |\n';
-            summary += '|------|------|-------|-------|-----|\n';
+            summary += '| Type | Name | Field | Error | Action | URL |\n';
+            summary += '|------|------|-------|-------|--------|-----|\n';
+            
             stats.errors.forEach(err => {
-                summary += `| ${err.type} | ${err.name} | ${err.field} | ${err.error} | ${err.value} |\n`;
+                const action = err.field === 'url' ? '🗑️ Deleted' : '⚠️ Kept';
+                summary += `| ${err.type} | ${err.name} | ${err.field} | ${err.error} | ${action} | ${err.value} |\n`;
             });
+            
+            summary += '\n> **Note**: Files are only deleted if their primary `url` is inaccessible. Avatar failures only trigger a warning.\n';
+            
             fs.appendFileSync(summaryPath, summary);
         }
         
