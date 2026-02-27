@@ -19,25 +19,27 @@ jobs:
           SYNC_DIR="/tmp/fuwari_sync_$(date +%s)"
           mkdir -p "$SYNC_DIR"
           
-          # 仅拷贝项目文件，不拷贝 .git 目录以确保“无历史”
-          rsync -av --exclude='.git' ./ "$SYNC_DIR/"
+          # 使用 -q 隐藏拷贝过程
+          rsync -aq --exclude='.git' ./ "$SYNC_DIR/"
           
           cd "$SYNC_DIR"
           
           # 2. 初始化新的 Git 仓库
-          git init
+          git init -q
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
           # 3. 准备提交
           BRANCH_NAME=${GITHUB_REF_NAME}
-          git checkout -b "$BRANCH_NAME"
+          git checkout -b "$BRANCH_NAME" -q
           git add .
-          git commit -m "sync: commit from GitHub (${GITHUB_SHA:0:7})"
+          # 使用 -q 隐藏 "create mode" 列表
+          git commit -q -m "sync: commit from GitHub (${GITHUB_SHA:0:7})"
           
           # 4. 改写远程仓库为 CNB 并强制提交
           git remote add origin "https://cnb:${CNB_TOKEN}@${CNB_URL}"
-          git push -f origin "$BRANCH_NAME"
+          # 使用 -q 隐藏推送进度
+          git push -f -q origin "$BRANCH_NAME"
           
           # 5. 清理临时目录
           rm -rf "$SYNC_DIR"
