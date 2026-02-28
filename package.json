@@ -19,7 +19,8 @@
 		"ai-summary": "node scripts/generate-ai-summary.js",
 		"format": "biome format --write ./src",
 		"lint": "biome check --write ./src",
-		"postinstall": "patch-package"
+		"postinstall": "patch-package",
+		"test:admin": "node --test tests/admin/**/*.test.mjs"
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
