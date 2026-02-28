@@ -1,5 +1,6 @@
 ---
 // Admin dashboard index page
+import DraftEditor from "../../components/admin/DraftEditor.svelte";
 ---
 
 <!DOCTYPE html>
@@ -12,6 +13,16 @@
 	<body>
 		<h1>Admin Dashboard</h1>
 		<p>Welcome to the admin panel.</p>
-		<!-- TODO: Add draft list and editor -->
+
+		<section>
+			<h2>草稿列表</h2>
+			<!-- TODO: Load and display draft list from API -->
+			<p>暂无草稿</p>
+		</section>
+
+		<section>
+			<h2>新建/编辑草稿</h2>
+			<DraftEditor client:load />
+		</section>
 	</body>
 </html>
