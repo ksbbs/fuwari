@@ -1,5 +1,7 @@
 import type { APIRoute } from "astro";
 
+export const prerender = false;
+
 export interface NormalizedDraft {
 	title: string;
 	slug: string;

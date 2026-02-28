@@ -1,5 +1,7 @@
 import type { APIRoute } from "astro";
 
+export const prerender = false;
+
 // GET: fetch single draft by id
 export const GET: APIRoute = async ({ params }) => {
 	const id = params.id;
