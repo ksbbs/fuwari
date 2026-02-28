@@ -193,6 +193,37 @@ themeColor: {
 - Markdown 样式：`src/styles/markdown.css`
 - 变量定义：`src/styles/variables.styl`
 
+## 🔐 后台管理面板（可选）
+
+项目内置 serverless 后台，草稿存储在 Supabase，发布时通过 GitHub API 将 Markdown 提交到 `main` 分支。
+
+### 环境变量
+
+在 `.env` 中配置：
+
+```env
+PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+GITHUB_TOKEN=ghp_xxx
+GITHUB_OWNER=your-username
+GITHUB_REPO=your-repo
+GITHUB_BRANCH=main
+ADMIN_EMAIL=admin@example.com
+```
+
+### 数据库初始化
+
+```bash
+supabase db push
+```
+
+迁移文件位于 `supabase/migrations/`。
+
+### 访问后台
+
+启动 `pnpm dev` 后访问 `/admin`，使用 `ADMIN_EMAIL` 对应的 Supabase 账号登录。
+
 ## 📦 部署
 
 构建后的静态文件位于 `dist/` 目录，可部署到任何静态托管平台。

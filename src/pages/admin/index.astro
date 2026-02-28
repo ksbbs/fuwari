@@ -1,0 +1,62 @@
+---
+// Admin dashboard index page
+export const prerender = false;
+import DraftEditor from "../../components/admin/DraftEditor.svelte";
+---
+
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Admin Dashboard</title>
+	</head>
+	<body>
+		<h1>Admin Dashboard</h1>
+		<p>Welcome to the admin panel.</p>
+
+		<section>
+			<h2>草稿列表</h2>
+			<!-- TODO: Load and display draft list from API -->
+			<p>暂无草稿</p>
+		</section>
+
+		<section>
+			<h2>新建/编辑草稿</h2>
+			<DraftEditor client:load />
+		</section>
+
+		<section>
+			<h2>发布</h2>
+			<button id="publish-btn" type="button">发布到 Git</button>
+			<div id="publish-result"></div>
+		</section>
+
+		<script>
+			const publishBtn = document.getElementById("publish-btn");
+			const publishResult = document.getElementById("publish-result");
+
+			publishBtn?.addEventListener("click", async () => {
+				if (!publishResult) return;
+				publishResult.textContent = "发布中...";
+
+				try {
+					const res = await fetch("/api/admin/publish", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({ id: "draft-id-placeholder" }),
+					});
+					const data = await res.json();
+
+					if (data.ok) {
+						publishResult.textContent = `发布成功！Commit: ${data.commitSha ?? "pending"}`;
+					} else {
+						publishResult.textContent = `发布失败：${data.error ?? "未知错误"}`;
+					}
+				} catch (e) {
+					publishResult.textContent = `请求失败：${e instanceof Error ? e.message : "未知错误"}`;
+				}
+			});
+		</script>
+	</body>
+</html>

@@ -1,4 +1,5 @@
 import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import type { APIRoute } from "astro";
 
 interface SitemapPage {
@@ -9,9 +10,12 @@ interface SitemapPage {
 }
 
 export const GET: APIRoute = async () => {
-	const posts = await getCollection("posts", ({ data }) => {
-		return !data.draft;
-	});
+	const posts = await getCollection(
+		"posts",
+		({ data }: CollectionEntry<"posts">) => {
+			return !data.draft;
+		},
+	);
 
 	const staticPages: SitemapPage[] = [
 		{ url: "/", priority: 1.0, changefreq: "daily" },
@@ -22,12 +26,14 @@ export const GET: APIRoute = async () => {
 		{ url: "/changes/", priority: 0.5, changefreq: "daily" },
 	];
 
-	const postPages: SitemapPage[] = posts.map((post) => ({
-		url: `/posts/${post.slug}/`,
-		priority: 0.7,
-		changefreq: "weekly",
-		lastmod: post.data.updated || post.data.published,
-	}));
+	const postPages: SitemapPage[] = posts.map(
+		(post: CollectionEntry<"posts">) => ({
+			url: `/posts/${post.slug}/`,
+			priority: 0.7,
+			changefreq: "weekly",
+			lastmod: post.data.updated || post.data.published,
+		}),
+	);
 
 	const allPages: SitemapPage[] = [...staticPages, ...postPages];
 
