@@ -44,3 +44,4 @@ v0-gallery-website-main
 dev
 
 scripts/__pycache__/
+.worktrees
