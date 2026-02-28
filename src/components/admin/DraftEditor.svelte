@@ -1,40 +1,40 @@
 <script lang="ts">
-	interface Props {
-		draft?: {
-			id?: string;
-			title?: string;
-			slug?: string;
-			description?: string;
-			body_markdown?: string;
-			tags?: string[];
-		};
-	}
+interface Props {
+	draft?: {
+		id?: string;
+		title?: string;
+		slug?: string;
+		description?: string;
+		body_markdown?: string;
+		tags?: string[];
+	};
+}
 
-	let { draft = {} } = $props<Props>();
+let { draft = {} } = $props<Props>();
 
-	let title = $state(draft.title ?? "");
-	let slug = $state(draft.slug ?? "");
-	let description = $state(draft.description ?? "");
-	let bodyMarkdown = $state(draft.body_markdown ?? "");
-	let tagsInput = $state((draft.tags ?? []).join(", "));
+let title = $state(draft.title ?? "");
+let slug = $state(draft.slug ?? "");
+let description = $state(draft.description ?? "");
+let bodyMarkdown = $state(draft.body_markdown ?? "");
+let tagsInput = $state((draft.tags ?? []).join(", "));
 
-	async function handleSave() {
-		const tags = tagsInput
-			.split(",")
-			.map((t) => t.trim())
-			.filter(Boolean);
+async function handleSave() {
+	const tags = tagsInput
+		.split(",")
+		.map((t) => t.trim())
+		.filter(Boolean);
 
-		const payload = {
-			title,
-			slug,
-			description,
-			body_markdown: bodyMarkdown,
-			tags,
-		};
+	const payload = {
+		title,
+		slug,
+		description,
+		body_markdown: bodyMarkdown,
+		tags,
+	};
 
-		// TODO: Implement actual save to API
-		console.log("Saving draft:", payload);
-	}
+	// TODO: Implement actual save to API
+	console.log("Saving draft:", payload);
+}
 </script>
 
 <div class="draft-editor">

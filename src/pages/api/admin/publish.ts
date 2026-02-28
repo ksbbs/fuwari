@@ -1,6 +1,10 @@
 import type { APIRoute } from "astro";
+import {
+	buildRepoPath,
+	toBase64Content,
+	toPublishPath,
+} from "../../../lib/server/admin/github.ts";
 import { buildPostMarkdown } from "../../../lib/server/admin/markdown.ts";
-import { buildRepoPath, toBase64Content, toPublishPath } from "../../../lib/server/admin/github.ts";
 
 export { toPublishPath };
 
@@ -17,10 +21,13 @@ export const POST: APIRoute = async ({ request }) => {
 		const draftId = (body as { id?: string }).id;
 
 		if (!draftId) {
-			return new Response(JSON.stringify({ ok: false, error: "Missing draft id" }), {
-				status: 400,
-				headers: { "Content-Type": "application/json" },
-			});
+			return new Response(
+				JSON.stringify({ ok: false, error: "Missing draft id" }),
+				{
+					status: 400,
+					headers: { "Content-Type": "application/json" },
+				},
+			);
 		}
 
 		// TODO: Implement full publish flow:

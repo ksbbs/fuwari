@@ -3,6 +3,8 @@ import { gitHubEditConfig } from "../config";
 // @ts-ignore
 import gitHistory from "../json/git-history.json";
 
+const gitHistoryMap = gitHistory as Record<string, Commit[]>;
+
 export interface Commit {
 	hash: string;
 	date: string;
@@ -15,8 +17,8 @@ export function getPostHistory(postId: string): Commit[] {
 		const normalizedId = postId.replace(/\\/g, "/");
 
 		// Look up in the pre-generated history map
-		if (gitHistory?.[normalizedId]) {
-			return gitHistory[normalizedId];
+		if (gitHistoryMap[normalizedId]) {
+			return gitHistoryMap[normalizedId];
 		}
 
 		return [];
