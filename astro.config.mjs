@@ -1,4 +1,4 @@
-import node from "@astrojs/node";
+import cloudflare from "@astrojs/cloudflare";
 import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
@@ -103,7 +103,7 @@ export default defineConfig({
 	base: "/",
 	trailingSlash: "always",
 	output: "static",
-	adapter: node({ mode: "standalone" }),
+	adapter: cloudflare(),
 	redirects: {
 		"/privacy-policy": {
 			status: 302,
